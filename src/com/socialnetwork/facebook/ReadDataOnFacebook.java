@@ -7,8 +7,6 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
-import javax.swing.JOptionPane;
-
 import com.common.CommonUtils;
 import com.restfb.DefaultFacebookClient;
 import com.restfb.FacebookClient;
@@ -22,10 +20,12 @@ public class ReadDataOnFacebook {
 	private final static List<UserObject> friends = new ArrayList<UserObject>();
 
 	public static void main(String agr[]) {
-		String access_token = JOptionPane.showInputDialog("Nhập Access token:");
-		if (access_token == null) {
-			System.exit(1);
-		}
+		// String access_token =
+		// JOptionPane.showInputDialog("Nhập Access token:");
+		// if (access_token == null) {
+		// System.exit(1);
+		// }
+		String access_token = "EAACEdEose0cBAGx85us0oTd1CgEz644nPzW8mm1gwkvdAlXZBrJGeZCZAoLIcqRBJJjxWeVBZAEDp714F67ZAoVX5wAevQGWRR1RfU7ZCZBdlgSPHkOyGay7AVZCjKMNv8DHt5FlfmBPz2vGFXYpED4iz9jkBKQ0VgqGSeikZBulmZCXat7gzExoqJSZC5DRD9mBm4ZD";
 		long start = System.currentTimeMillis();
 		FacebookClient facebookClient = new DefaultFacebookClient(access_token, Version.VERSION_2_8);
 		User me = facebookClient.fetchObject("me", User.class);

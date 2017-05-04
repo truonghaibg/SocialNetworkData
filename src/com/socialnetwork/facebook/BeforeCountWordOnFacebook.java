@@ -78,7 +78,7 @@ public class BeforeCountWordOnFacebook {
 		FileWriter writer = null;
 		try {
 			writer = new FileWriter("source/training.csv");
-			Object predictList = null;
+			// Object predictList = null;
 			// for (String aaa : predictList) {
 			// writer.write(aaa + "\n");
 			// }

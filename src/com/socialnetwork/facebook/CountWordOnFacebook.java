@@ -34,7 +34,7 @@ public class CountWordOnFacebook {
 		Map<String, FacebookObject> hashMap = new LinkedHashMap<String, FacebookObject>();
 		Map<String, Integer> wordMap = new HashMap<String, Integer>();
 		BufferedReader buffReader = null;
-		int i = 0;
+		// int i = 0;
 		try {
 			buffReader = new BufferedReader(new InputStreamReader(new FileInputStream(new File(nameFile)), GeneralConstant.ENCODING_UTF8));
 			String line;
@@ -45,7 +45,7 @@ public class CountWordOnFacebook {
 					FacebookObject temp = new FacebookObject(user[2].trim(), user[3].trim(), user[4].trim());
 					hashMap.put(user[3].trim(), temp);
 				}
-				i++;
+				// i++;
 			}
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
