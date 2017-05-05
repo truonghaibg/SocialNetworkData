@@ -8,6 +8,7 @@ public class FacebookObject {
 	private String gender;
 	private String messageId;
 	private String message;
+	private String fullMessage;
 	private Map<String, Integer> oneGram;
 	private Map<String, Integer> twoGram;
 	private Map<String, Integer> threeGram;
@@ -30,6 +31,10 @@ public class FacebookObject {
 		this.gender = gender;
 		this.messageId = messageId;
 		this.message = message;
+	}
+
+	public void mergedMessage(String str) {
+		this.fullMessage = this.fullMessage + " " + str;
 	}
 
 	public FacebookObject(String gender, String messageId, String message) {
@@ -104,6 +109,14 @@ public class FacebookObject {
 
 	public void setThreeGram(Map<String, Integer> threeGram) {
 		this.threeGram = threeGram;
+	}
+
+	public String getFullMessage() {
+		return fullMessage;
+	}
+
+	public void setFullMessage(String fullMessage) {
+		this.fullMessage = fullMessage;
 	}
 
 }

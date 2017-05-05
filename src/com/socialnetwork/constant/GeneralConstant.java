@@ -42,6 +42,7 @@ public final class GeneralConstant {
 	public static String FILTER_WORD = "source/filter_word.csv";
 	public static String ORIGIN_WORD = "source/origin_word.csv";
 	public static String VN_TOKENIZER_STATUS = "source/vn_tokenizer_status.csv";
+	public static String VN_TOKENIZER_STATUS_MERGED = "source/vn_tokenizer_status_merged.csv";
 	public static String LIBSVM_FILE_FINAL = "source/facebook_status.libsvm";
 	public static String LIBSVM_FILE_FINAL_WINDOWS_DEFAULT_TEST = "C:/libsvm-3.21/tools/facebook_default_test.libsvm";
 
