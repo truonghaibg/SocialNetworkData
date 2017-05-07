@@ -46,11 +46,11 @@ public final class GeneralConstant {
 	public static String LIBSVM_FILE_FINAL = "source/facebook_status.libsvm";
 	public static String LIBSVM_FILE_FINAL_WINDOWS_DEFAULT_TEST = "C:/libsvm-3.21/tools/facebook_default_test.libsvm";
 
-	public static String LIBSVM_FILE_FINAL_WINDOWS_TFIDF = "C:/libsvm-3.21/tools/facebook_tfidf.libsvm";
-	public static String LIBSVM_FILE_FINAL_WINDOWS_BINARY = "C:/libsvm-3.21/tools/facebook_binary.libsvm";
-	public static String LIBSVM_FILE_FINAL_WINDOWS_1GRAM = "C:/libsvm-3.21/tools/facebook_1gram.libsvm";
-	public static String LIBSVM_FILE_FINAL_WINDOWS_2GRAM = "C:/libsvm-3.21/tools/facebook_2gram.libsvm";
-	public static String LIBSVM_FILE_FINAL_WINDOWS_3GRAM = "C:/libsvm-3.21/tools/facebook_3gram.libsvm";
+	public static String LIBSVM_FILE_FINAL_WINDOWS_TFIDF = "C:/liblinear-2.11/windows/facebook_tfidf.libsvm";
+	public static String LIBSVM_FILE_FINAL_WINDOWS_BINARY = "C:/liblinear-2.11/windows/facebook_binary.libsvm";
+	public static String LIBSVM_FILE_FINAL_WINDOWS_1GRAM = "C:/liblinear-2.11/windows/facebook_1gram.libsvm";
+	public static String LIBSVM_FILE_FINAL_WINDOWS_2GRAM = "C:/liblinear-2.11/windows/facebook_2gram.libsvm";
+	public static String LIBSVM_FILE_FINAL_WINDOWS_3GRAM = "C:/liblinear-2.11/windows/facebook_3gram.libsvm";
 
 	public static String DIGIT = "#digit";
 	public static String SIGN_CHAR = "#signchar";

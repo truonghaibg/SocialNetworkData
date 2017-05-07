@@ -24,7 +24,7 @@ public class CountWordOnFacebook {
 	public static void main(String agr[]) throws IOException {
 		// processNotVnTokenzierFile(GeneralConstant.FULL_STATUS_FILTER, false,
 		// true);
-		processVnTokenzierFile(GeneralConstant.VN_TOKENIZER_STATUS, false, false, false, false);
+		processVnTokenzierFile(GeneralConstant.VN_TOKENIZER_STATUS_MERGED, false, false, true, false);
 
 		// handleFileFake(GeneralConstant.TEST_FILE);
 

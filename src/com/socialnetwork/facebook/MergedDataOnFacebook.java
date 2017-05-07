@@ -7,7 +7,9 @@ import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map.Entry;
 
 import com.socialnetwork.constant.GeneralConstant;
@@ -15,6 +17,13 @@ import com.socialnetwork.model.FacebookObject;
 
 public class MergedDataOnFacebook {
 	public static void main(String agr[]) throws IOException {
+		// merged();
+		String inputFile = "source/vn_tokenizer_status_merged.csv";
+		String compareFile = "source/result.txt";
+		merged(inputFile, compareFile);
+	}
+
+	public static void merged() throws IOException {
 		HashMap<String, FacebookObject> users = new HashMap<String, FacebookObject>();
 		BufferedReader buffReader = null;
 		try {
@@ -54,6 +63,62 @@ public class MergedDataOnFacebook {
 			for (Entry<String, FacebookObject> entry : users.entrySet()) {
 				FacebookObject value = entry.getValue();
 				writer.write(value.getId() + "," + value.getName() + "," + value.getGender() + "," + value.getId() + "," + value.getFullMessage() + "\n");
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			if (writer != null) {
+				writer.close();
+			}
+		}
+	}
+
+	public static void merged(String inputFile, String compareFile) throws IOException {
+		List<String> results = new ArrayList<String>();
+		List<String> stts = new ArrayList<String>();
+		BufferedReader buffReader = null;
+		try {
+			buffReader = new BufferedReader(new InputStreamReader(new FileInputStream(new File(compareFile)), GeneralConstant.ENCODING_UTF8));
+			String line;
+			while ((line = buffReader.readLine()) != null) {
+				results.add(Integer.parseInt(line) == 1 ? GeneralConstant.CLASSIFY.MALE : GeneralConstant.CLASSIFY.FEMALE);
+			}
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			if (buffReader != null) {
+				buffReader.close();
+			}
+		}
+
+		try {
+			buffReader = new BufferedReader(new InputStreamReader(new FileInputStream(new File(inputFile)), GeneralConstant.ENCODING_UTF8));
+			String line;
+			int i = 0;
+			while ((line = buffReader.readLine()) != null) {
+				String[] split = line.split(",");
+				if (split[2].equals(results.get(i))) {
+					stts.add(line);
+				}
+				i++;
+			}
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			if (buffReader != null) {
+				buffReader.close();
+			}
+		}
+		FileWriter writer = null;
+		try {
+			writer = new FileWriter("source/new_training.csv");
+			// Object predictList = null;
+			for (String stt : stts) {
+				writer.write(stt + "\n");
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
