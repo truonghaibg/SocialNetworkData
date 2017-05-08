@@ -21,6 +21,65 @@ public class MergedDataOnFacebook {
 		String inputFile = "source/vn_tokenizer_status.csv";
 		String compareFile = "source/result.txt";
 		// merged(inputFile, compareFile);
+		// filter(inputFile, compareFile);
+	}
+
+	public static void filter(String file, String compareFile) throws IOException {
+		List<String> results = new ArrayList<String>();
+		List<String> stts = new ArrayList<String>();
+		BufferedReader buffReader = null;
+		try {
+			buffReader = new BufferedReader(new InputStreamReader(new FileInputStream(new File(compareFile)), GeneralConstant.ENCODING_UTF8));
+			String line;
+			while ((line = buffReader.readLine()) != null) {
+				results.add(Integer.parseInt(line) == 1 ? GeneralConstant.CLASSIFY.MALE : GeneralConstant.CLASSIFY.FEMALE);
+			}
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			if (buffReader != null) {
+				buffReader.close();
+			}
+		}
+
+		try {
+			buffReader = new BufferedReader(new InputStreamReader(new FileInputStream(new File(file)), GeneralConstant.ENCODING_UTF8));
+			String line;
+			int i = 0;
+			while ((line = buffReader.readLine()) != null) {
+				String[] split = line.split(",");
+				if (!split[2].equals(results.get(i)) && split[2].equals(GeneralConstant.CLASSIFY.MALE) && split[4].length() < 40) {
+					// stts.add(split[3]);
+				} else {
+					stts.add(line);
+				}
+				i++;
+			}
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			if (buffReader != null) {
+				buffReader.close();
+			}
+		}
+		FileWriter writer = null;
+		try {
+			writer = new FileWriter(file);
+			// Object predictList = null;
+			for (String stt : stts) {
+				writer.write(stt + "\n");
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			if (writer != null) {
+				writer.close();
+			}
+		}
 	}
 
 	public static void merged() throws IOException {

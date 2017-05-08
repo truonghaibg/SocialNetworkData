@@ -761,6 +761,10 @@ public class FacebookUtils {
 			return true;
 		}
 
+		if (key.split("_").length == 1) {
+			System.out.println(key);
+		}
+
 		return false;
 	}
 
