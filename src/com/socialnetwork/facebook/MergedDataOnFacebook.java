@@ -17,10 +17,10 @@ import com.socialnetwork.model.FacebookObject;
 
 public class MergedDataOnFacebook {
 	public static void main(String agr[]) throws IOException {
-		// merged();
-		String inputFile = "source/vn_tokenizer_status_merged.csv";
+		merged();
+		String inputFile = "source/vn_tokenizer_status.csv";
 		String compareFile = "source/result.txt";
-		merged(inputFile, compareFile);
+		// merged(inputFile, compareFile);
 	}
 
 	public static void merged() throws IOException {
@@ -115,7 +115,7 @@ public class MergedDataOnFacebook {
 		}
 		FileWriter writer = null;
 		try {
-			writer = new FileWriter("source/new_training.csv");
+			writer = new FileWriter("source/vn_tokenizer_status.csv");
 			// Object predictList = null;
 			for (String stt : stts) {
 				writer.write(stt + "\n");

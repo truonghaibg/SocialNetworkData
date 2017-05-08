@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import com.common.CommonUtils;
 import com.socialnetwork.constant.GeneralConstant;
 import com.socialnetwork.facebook.FacebookUtils;
 import com.socialnetwork.model.FacebookObject;
@@ -32,8 +33,11 @@ public class FakeData {
 			while ((line = buffReader.readLine()) != null) {
 				String[] user = line.split(",", 5);
 				if (user.length == 5) {
-					FacebookUtils.getInstance().feebWordFromStringScanner(wordMap, user[4]);
-					FacebookObject temp = new FacebookObject(user[2].trim(), user[3].trim(), user[4].trim());
+					String mgs = user[4].trim();
+					mgs = mgs.replaceAll("\\d+", GeneralConstant.DIGIT);
+					mgs = CommonUtils.formatString(mgs);
+					FacebookUtils.getInstance().feebWordFromStringScanner(wordMap, mgs);
+					FacebookObject temp = new FacebookObject(user[2].trim(), user[3].trim(), mgs);
 					hashMap.put(user[3].trim(), temp);
 				}
 			}
@@ -123,8 +127,11 @@ public class FakeData {
 			while ((line = buffReader.readLine()) != null) {
 				String[] user = line.split(",", 5);
 				if (user.length == 5) {
-					FacebookUtils.getInstance().feebWordFromStringScanner(wordMap, user[4]);
-					FacebookObject temp = new FacebookObject(user[2].trim(), user[3].trim(), user[4].trim());
+					String mgs = user[4].trim();
+					mgs = mgs.replaceAll("\\d+", GeneralConstant.DIGIT);
+					mgs = CommonUtils.formatString(mgs);
+					FacebookUtils.getInstance().feebWordFromStringScanner(wordMap, mgs);
+					FacebookObject temp = new FacebookObject(user[2].trim(), user[3].trim(), mgs);
 					hashMap.put(user[3].trim(), temp);
 				}
 			}

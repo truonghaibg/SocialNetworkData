@@ -209,13 +209,11 @@ public class FacebookUtils {
 		for (FacebookObject result : results) {
 			Map<String, Integer> twoGramTemp = new LinkedHashMap<String, Integer>();
 			String mgs = result.getMessage().trim();
+			mgs = mgs.replaceAll("\\d+", GeneralConstant.DIGIT);
+			mgs = CommonUtils.formatString(mgs);
+
 			String[] words = mgs.split("\\s+");
 			int length = words.length;
-			for (int i = 0; i < length; i++) {
-				if (isOnlyDigits(words[i])) {
-					words[i] = GeneralConstant.DIGIT;
-				}
-			}
 			for (int i = 0; i < length - 1; i++) {
 				String word = words[i].trim() + " " + words[i + 1].trim();
 				Integer count = twoGramTemp.get(word);
@@ -308,17 +306,12 @@ public class FacebookUtils {
 		}
 		System.out.println("Size of 3gram: " + threeGram.size());
 		int i = 1;
-		for (Entry<String, Integer> entry : threeGram.entrySet()) {
-			System.out.println(entry.getValue());
-			// System.out.println(i++);
-		}
 		for (FacebookObject result : results) {
 			if (GeneralConstant.CLASSIFY.FEMALE.equalsIgnoreCase(result.getGender())) {
 				writer.write(GeneralConstant.CLASSIFY.FEMALE_VALUE);
 			} else if (GeneralConstant.CLASSIFY.MALE.equalsIgnoreCase(result.getGender())) {
 				writer.write(GeneralConstant.CLASSIFY.MALE_VALUE);
 			}
-			i = 1;
 			i = 1;
 			for (Entry<String, Integer> entry : threeGram.entrySet()) {
 				if (result.getThreeGram().containsKey(entry.getKey())) {
@@ -534,9 +527,9 @@ public class FacebookUtils {
 	}
 
 	public void putWordIntoMap(Map<String, Integer> wordMap, String word) {
-		if (isOnlyDigits(word)) {
-			word = GeneralConstant.DIGIT;
-		}
+		// if (isOnlyDigits(word)) {
+		// word = GeneralConstant.DIGIT;
+		// }
 		// if (isHashTag(word)) {
 		// word = GeneralConstant.HASH_TAG;
 		// }
@@ -758,11 +751,13 @@ public class FacebookUtils {
 		return Normalizer.normalize(string, Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
 	}
 
-	public boolean removeWord(Entry<String, Integer> obj) {
-		if (obj.getValue().intValue() < 5) {
+	public boolean removeWord(Entry<String, Integer> entry) {
+		String key = entry.getKey();
+		Integer value = entry.getValue();
+		if (value < 5) {
 			return true;
 		}
-		if (obj.getKey().length() <= 1 || FacebookUtils.getInstance().isNumberInWord(obj.getKey())) {
+		if (key.length() <= 1 || FacebookUtils.getInstance().isNumberInWord(key)) {
 			return true;
 		}
 

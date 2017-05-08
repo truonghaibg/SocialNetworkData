@@ -7,6 +7,9 @@ public class VietNam {
 	public static void main(String agr[]) {
 		Integer a = 1, b = 10000;
 		System.out.println((double) a / b);
+		String firstname1 = "i ee44 a1 1222";
+		firstname1 = firstname1.replaceAll("\\d+", " $0 ");
+		System.out.println(firstname1);// Prints Sam
 		// tokenizer.segment("");
 		// tokenizer.tokenize(DATA_FILE_INPUT, DATA_FILE_OUTPUT);
 		// DetectLanguage.apiKey = "ef108ab62228dd0d2da7b9a399f3a285";

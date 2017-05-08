@@ -16,6 +16,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TreeMap;
 
+import com.common.CommonUtils;
 import com.socialnetwork.constant.GeneralConstant;
 import com.socialnetwork.model.FacebookObject;
 
@@ -24,7 +25,7 @@ public class CountWordOnFacebook {
 	public static void main(String agr[]) throws IOException {
 		// processNotVnTokenzierFile(GeneralConstant.FULL_STATUS_FILTER, false,
 		// true);
-		processVnTokenzierFile(GeneralConstant.VN_TOKENIZER_STATUS_MERGED, false, false, true, false);
+		processVnTokenzierFile(GeneralConstant.VN_TOKENIZER_STATUS_MERGED, false, true, true, true);
 
 		// handleFileFake(GeneralConstant.TEST_FILE);
 
@@ -41,8 +42,11 @@ public class CountWordOnFacebook {
 			while ((line = buffReader.readLine()) != null) {
 				String[] user = line.split(",", 5);
 				if (user.length == 5) {
-					FacebookUtils.getInstance().feebWordFromStringScanner(wordMap, user[4]);
-					FacebookObject temp = new FacebookObject(user[2].trim(), user[3].trim(), user[4].trim());
+					String mgs = user[4];
+					mgs = mgs.replaceAll("\\d+", GeneralConstant.DIGIT);
+					mgs = CommonUtils.formatString(mgs);
+					FacebookUtils.getInstance().feebWordFromStringScanner(wordMap, mgs);
+					FacebookObject temp = new FacebookObject(user[2].trim(), user[3].trim(), mgs.trim());
 					hashMap.put(user[3].trim(), temp);
 				}
 				// i++;
@@ -149,8 +153,11 @@ public class CountWordOnFacebook {
 			while ((line = buffReader.readLine()) != null) {
 				String[] user = line.split(",", 5);
 				if (user.length == 5) {
-					FacebookUtils.getInstance().feebWordFromStringScanner(wordMap, user[4]);
-					FacebookObject temp = new FacebookObject(user[2].trim(), user[3].trim(), user[4].trim());
+					String mgs = user[4].trim();
+					mgs = mgs.replaceAll("\\d+", GeneralConstant.DIGIT);
+					mgs = CommonUtils.formatString(mgs);
+					FacebookUtils.getInstance().feebWordFromStringScanner(wordMap, mgs);
+					FacebookObject temp = new FacebookObject(user[2].trim(), user[3].trim(), mgs);
 					hashMap.put(user[3].trim(), temp);
 				}
 			}
@@ -240,8 +247,11 @@ public class CountWordOnFacebook {
 			while ((line = buffReader.readLine()) != null) {
 				String[] user = line.split(",", 5);
 				if (user.length == 5) {
-					FacebookUtils.getInstance().feebWordFromStringScanner(wordMap, user[4]);
-					FacebookObject temp = new FacebookObject(user[2].trim(), user[3].trim(), user[4].trim());
+					String mgs = user[4].trim();
+					mgs = mgs.replaceAll("\\d+", GeneralConstant.DIGIT);
+					mgs = CommonUtils.formatString(mgs);
+					FacebookUtils.getInstance().feebWordFromStringScanner(wordMap, mgs);
+					FacebookObject temp = new FacebookObject(user[2].trim(), user[3].trim(), mgs);
 					hashMap.put(user[3].trim(), temp);
 				}
 			}

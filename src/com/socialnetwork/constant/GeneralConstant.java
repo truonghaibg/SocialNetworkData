@@ -52,7 +52,7 @@ public final class GeneralConstant {
 	public static String LIBSVM_FILE_FINAL_WINDOWS_2GRAM = "C:/liblinear-2.11/windows/facebook_2gram.libsvm";
 	public static String LIBSVM_FILE_FINAL_WINDOWS_3GRAM = "C:/liblinear-2.11/windows/facebook_3gram.libsvm";
 
-	public static String DIGIT = "#digit";
+	public static String DIGIT = " #digit ";
 	public static String SIGN_CHAR = "#signchar";
 	public static String HASH_TAG = "#hashtag";
 	public static String LETTER_LONG = "#letterlong";

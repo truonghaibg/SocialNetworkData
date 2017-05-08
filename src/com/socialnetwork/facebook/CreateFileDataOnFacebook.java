@@ -74,7 +74,7 @@ public class CreateFileDataOnFacebook {
 					sb.append(user.getName()).append(',');
 					sb.append(user.getGender()).append(',');
 					sb.append(feed.getId()).append(',');
-					sb.append(msg).append("\n");
+					sb.append(" " + msg + " ").append("\n");
 					writer.write(sb.toString());
 				}
 			}
