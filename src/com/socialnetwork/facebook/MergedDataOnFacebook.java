@@ -18,10 +18,9 @@ import com.socialnetwork.model.FacebookObject;
 public class MergedDataOnFacebook {
 	public static void main(String agr[]) throws IOException {
 		merged();
-		String inputFile = "source/vn_tokenizer_status.csv";
 		String compareFile = "source/result.txt";
 		// merged(inputFile, compareFile);
-		// filter(inputFile, compareFile);
+		// filter(GeneralConstant.VN_TOKENIZER_STATUS, compareFile);
 	}
 
 	public static void filter(String file, String compareFile) throws IOException {
@@ -48,15 +47,18 @@ public class MergedDataOnFacebook {
 			buffReader = new BufferedReader(new InputStreamReader(new FileInputStream(new File(file)), GeneralConstant.ENCODING_UTF8));
 			String line;
 			int i = 0;
+			int count = 0;
 			while ((line = buffReader.readLine()) != null) {
 				String[] split = line.split(",");
-				if (!split[2].equals(results.get(i)) && split[2].equals(GeneralConstant.CLASSIFY.MALE) && split[4].length() < 40) {
-					// stts.add(split[3]);
+				if (!split[2].equals(results.get(i)) && split[2].equals(GeneralConstant.CLASSIFY.MALE) && split[4].length() < 50) {
+					System.out.println(split[3]);
+					count++;
 				} else {
 					stts.add(line);
 				}
 				i++;
 			}
+			System.out.println("count: " + count);
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -66,9 +68,10 @@ public class MergedDataOnFacebook {
 				buffReader.close();
 			}
 		}
+
 		FileWriter writer = null;
 		try {
-			writer = new FileWriter(file);
+			writer = new FileWriter("source/_vn_tokenizer_status.csv");
 			// Object predictList = null;
 			for (String stt : stts) {
 				writer.write(stt + "\n");

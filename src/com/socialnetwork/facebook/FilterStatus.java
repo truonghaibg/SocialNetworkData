@@ -23,6 +23,7 @@ public class FilterStatus {
 	public static void main(String agr[]) throws IOException {
 		List<String> strList = new ArrayList<String>();
 		Set<String> blackList = new HashSet<String>(FilterStatus.loadWordInFile(GeneralConstant.BLACK_LIST_FILE));
+		Set<String> blackListStatus = new HashSet<String>(FilterStatus.loadBackListStatus(GeneralConstant.BLACK_LIST_FILE_STATUS));
 		List<String> lists = FilterStatus.loadWordInFile(GeneralConstant.FILTER_FILE);
 
 		FileWriter writer = null;
@@ -35,6 +36,9 @@ public class FilterStatus {
 			while ((line = buffReader.readLine()) != null) {
 				String[] user = line.split(",", 5);
 				if (blackList.contains(user[0])) {
+					continue;
+				}
+				if (blackListStatus.contains(user[3])) {
 					continue;
 				}
 				if (user.length == 5 && !isContant(lists, user[4]) && checkLength(user[4], 5, 255) && checkNumberWord(user[4])) {
@@ -162,14 +166,14 @@ public class FilterStatus {
 				buffReader.close();
 			}
 		}
-		// words.add(" a ");
+		words.add(" a ");
 		words.add(" ă ");
 		words.add(" â ");
 		words.add(" b ");
-		// words.add(" c ");
+		words.add(" c ");
 		words.add(" d ");
 		words.add(" đ ");
-		// words.add(" e ");
+		words.add(" e ");
 		words.add(" ê ");
 		words.add(" g ");
 		words.add(" h ");
@@ -188,8 +192,34 @@ public class FilterStatus {
 		words.add(" ư ");
 		words.add(" v ");
 		words.add(" x ");
-		words.add("đ ");
-		words.add("ki ");
+
+		return words;
+	}
+
+	public static List<String> loadBackListStatus(String nameFile) throws IOException {
+		List<String> words = new ArrayList<String>();
+		BufferedReader buffReader = null;
+		try {
+			buffReader = new BufferedReader(new InputStreamReader(new FileInputStream(new File(nameFile)), GeneralConstant.ENCODING_UTF8));
+			String line;
+			while ((line = buffReader.readLine()) != null) {
+				String[] wordInLines = line.split(",");
+				for (String wordInLine : wordInLines) {
+					if ("".equalsIgnoreCase(wordInLine.trim())) {
+						continue;
+					}
+					words.add(wordInLine.trim());
+				}
+			}
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			if (buffReader != null) {
+				buffReader.close();
+			}
+		}
 
 		return words;
 	}

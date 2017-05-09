@@ -12,6 +12,7 @@ public class FacebookObject {
 	private Map<String, Integer> oneGram;
 	private Map<String, Integer> twoGram;
 	private Map<String, Integer> threeGram;
+	private Map<String, Integer> mergedGram;
 
 	public Integer getTotalWord() {
 		Integer dem = 0;
@@ -117,6 +118,14 @@ public class FacebookObject {
 
 	public void setFullMessage(String fullMessage) {
 		this.fullMessage = fullMessage;
+	}
+
+	public Map<String, Integer> getMergedGram() {
+		return mergedGram;
+	}
+
+	public void setMergedGram(Map<String, Integer> mergedGram) {
+		this.mergedGram = mergedGram;
 	}
 
 }

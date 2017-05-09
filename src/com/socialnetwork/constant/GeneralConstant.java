@@ -39,6 +39,7 @@ public final class GeneralConstant {
 	public static String FEMALE_FILE = "source/full_female.csv";
 	public static String FILTER_FILE = "source/filter.data";
 	public static String BLACK_LIST_FILE = "source/black_list.data";
+	public static String BLACK_LIST_FILE_STATUS = "source/black_list_status.data";
 	public static String FILTER_WORD = "source/filter_word.csv";
 	public static String ORIGIN_WORD = "source/origin_word.csv";
 	public static String VN_TOKENIZER_STATUS = "source/vn_tokenizer_status.csv";
@@ -51,6 +52,7 @@ public final class GeneralConstant {
 	public static String LIBSVM_FILE_FINAL_WINDOWS_1GRAM = "C:/liblinear-2.11/windows/facebook_1gram.libsvm";
 	public static String LIBSVM_FILE_FINAL_WINDOWS_2GRAM = "C:/liblinear-2.11/windows/facebook_2gram.libsvm";
 	public static String LIBSVM_FILE_FINAL_WINDOWS_3GRAM = "C:/liblinear-2.11/windows/facebook_3gram.libsvm";
+	public static String LIBSVM_FILE_FINAL_WINDOWS_1GRAM_2GRAM = "C:/liblinear-2.11/windows/facebook_1gram_2gram.libsvm";
 
 	public static String DIGIT = " #digit ";
 	public static String SIGN_CHAR = "#signchar";

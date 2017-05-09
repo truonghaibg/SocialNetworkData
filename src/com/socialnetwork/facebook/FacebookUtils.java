@@ -8,6 +8,7 @@ import java.text.Normalizer;
 import java.text.Normalizer.Form;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -233,24 +234,9 @@ public class FacebookUtils {
 		}
 		System.out.println("Size of 2gram: " + twoGram.size());
 		int i = 1;
-		// Iterator<Entry<String, Integer>> iterator =
-		// twoGram.entrySet().iterator();
-		// while (iterator.hasNext()) {
-		// Entry<String, Integer> obj = iterator.next();
-		// if (FacebookUtils.getInstance().removeWord(obj)) {
-		// iterator.remove();
-		// }
-		// }
-		// Iterator<Entry<String, Integer>> iterator1 =
-		// threeGram.entrySet().iterator();
-		// while (iterator1.hasNext()) {
-		// Entry<String, Integer> obj = iterator1.next();
-		// if (FacebookUtils.getInstance().removeWord(obj)) {
-		// iterator1.remove();
-		// }
-		// }
-		// System.out.println("Size of 2gram: " + twoGram.size());
-		// System.out.println("Size of 3gram: " + threeGram.size());
+		// Begin: remove words
+		FacebookUtils.getInstance().removeWord(twoGram);
+		// End: remove words
 		for (FacebookObject result : results) {
 			if (GeneralConstant.CLASSIFY.FEMALE.equalsIgnoreCase(result.getGender())) {
 				writer.write(GeneralConstant.CLASSIFY.FEMALE_VALUE);
@@ -304,6 +290,9 @@ public class FacebookUtils {
 			}
 			result.setThreeGram(threeGramTemp);
 		}
+		// Begin: remove words
+		FacebookUtils.getInstance().removeWord(threeGram);
+		// End: remove words
 		System.out.println("Size of 3gram: " + threeGram.size());
 		int i = 1;
 		for (FacebookObject result : results) {
@@ -314,6 +303,79 @@ public class FacebookUtils {
 			}
 			i = 1;
 			for (Entry<String, Integer> entry : threeGram.entrySet()) {
+				if (result.getThreeGram().containsKey(entry.getKey())) {
+					writer.write(" " + i + ":" + result.getThreeGram().get(entry.getKey()));
+				}
+				i++;
+			}
+			writer.write("\n");
+		}
+
+		writer.flush();
+		writer.close();
+	}
+
+	public final void create1GramAnd2Gram(List<FacebookObject> results) throws IOException {
+		// create the Binary file
+		BufferedWriter writer = new BufferedWriter(new FileWriter(GeneralConstant.LIBSVM_FILE_FINAL_WINDOWS_1GRAM_2GRAM));
+
+		Map<String, Integer> mergedGram = new LinkedHashMap<String, Integer>();
+		// insert data into the Binary file
+		for (FacebookObject result : results) {
+			Map<String, Integer> mergedGramTemp = new LinkedHashMap<String, Integer>();
+			String mgs = result.getMessage().trim();
+			String[] words = mgs.split("\\s+");
+			int length = words.length;
+			for (int i = 0; i < length; i++) {
+				if (isOnlyDigits(words[i])) {
+					words[i] = GeneralConstant.DIGIT;
+				}
+			}
+			int i = 0;
+			for (i = 0; i < length - 1; i++) {
+				String word = words[i].trim() + " " + words[i + 1].trim();
+				Integer count = mergedGramTemp.get(word);
+				if (count == null) {
+					mergedGramTemp.put(word, 1);
+				} else {
+					mergedGramTemp.put(word, (count + 1));
+				}
+				count = mergedGram.get(word);
+				if (count == null) {
+					mergedGram.put(word, 1);
+				} else {
+					mergedGram.put(word, (count + 1));
+				}
+
+				word = words[i].trim();
+				count = mergedGramTemp.get(word);
+				if (count == null) {
+					mergedGramTemp.put(word, 1);
+				} else {
+					mergedGramTemp.put(word, (count + 1));
+				}
+				count = mergedGram.get(word);
+				if (count == null) {
+					mergedGram.put(word, 1);
+				} else {
+					mergedGram.put(word, (count + 1));
+				}
+			}
+			result.setMergedGram(mergedGramTemp);
+		}
+		// Begin: remove words
+		FacebookUtils.getInstance().removeWord(mergedGram);
+		// End: remove words
+		System.out.println("Size of 1gram + 2gram: " + mergedGram.size());
+		int i = 1;
+		for (FacebookObject result : results) {
+			if (GeneralConstant.CLASSIFY.FEMALE.equalsIgnoreCase(result.getGender())) {
+				writer.write(GeneralConstant.CLASSIFY.FEMALE_VALUE);
+			} else if (GeneralConstant.CLASSIFY.MALE.equalsIgnoreCase(result.getGender())) {
+				writer.write(GeneralConstant.CLASSIFY.MALE_VALUE);
+			}
+			i = 1;
+			for (Entry<String, Integer> entry : mergedGram.entrySet()) {
 				if (result.getThreeGram().containsKey(entry.getKey())) {
 					writer.write(" " + i + ":" + result.getThreeGram().get(entry.getKey()));
 				}
@@ -761,11 +823,21 @@ public class FacebookUtils {
 			return true;
 		}
 
-		if (key.split("_").length == 1) {
-			System.out.println(key);
-		}
+		// if (key.split("_").length == 1) {
+		// System.out.println(key);
+		// }
 
 		return false;
+	}
+
+	public void removeWord(Map<String, Integer> wordMap) {
+		Iterator<Entry<String, Integer>> iterator = wordMap.entrySet().iterator();
+		while (iterator.hasNext()) {
+			Entry<String, Integer> entry = iterator.next();
+			if (FacebookUtils.getInstance().removeWord(entry)) {
+				iterator.remove();
+			}
+		}
 	}
 
 	// Kiểm tra một word chỉ bao gồm letter có các char duplicate không

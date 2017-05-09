@@ -25,7 +25,7 @@ public class CountWordOnFacebook {
 	public static void main(String agr[]) throws IOException {
 		// processNotVnTokenzierFile(GeneralConstant.FULL_STATUS_FILTER, false,
 		// true);
-		processVnTokenzierFile(GeneralConstant.VN_TOKENIZER_STATUS_MERGED, false, true, true, false);
+		processVnTokenzierFile(GeneralConstant.VN_TOKENIZER_STATUS, false, true, true, false);
 
 		// handleFileFake(GeneralConstant.TEST_FILE);
 
@@ -80,14 +80,9 @@ public class CountWordOnFacebook {
 			}
 		}
 
-		// Filter words
-		Iterator<Entry<String, Integer>> iterator = wordMap.entrySet().iterator();
-		while (iterator.hasNext()) {
-			Entry<String, Integer> entry = iterator.next();
-			if (FacebookUtils.getInstance().removeWord(entry)) {
-				iterator.remove();
-			}
-		}
+		// Begin: remove words
+		FacebookUtils.getInstance().removeWord(wordMap);
+		// End: remove words
 		System.out.println("Filter Size: " + wordMap.size());
 		try {
 			writer = new FileWriter(GeneralConstant.FILTER_WORD);
