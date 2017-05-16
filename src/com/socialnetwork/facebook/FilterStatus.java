@@ -41,7 +41,7 @@ public class FilterStatus {
 				if (blackListStatus.contains(user[3])) {
 					continue;
 				}
-				if (user.length == 5 && !isContant(lists, user[4]) && checkLength(user[4], 5, 255) && checkNumberWord(user[4])) {
+				if (user.length == 5 && !isContant(lists, user[4]) && checkLength(user[4], 10, 255) && checkNumberWord(user[4])) {
 					strList.add(line);
 				} else {
 					dem++;
@@ -166,32 +166,32 @@ public class FilterStatus {
 				buffReader.close();
 			}
 		}
-		words.add(" a ");
-		words.add(" ă ");
-		words.add(" â ");
-		words.add(" b ");
-		words.add(" c ");
-		words.add(" d ");
-		words.add(" đ ");
-		words.add(" e ");
-		words.add(" ê ");
-		words.add(" g ");
-		words.add(" h ");
-		words.add(" i ");
-		words.add(" k ");
-		words.add(" l ");
-		words.add(" m ");
-		words.add(" n ");
-		words.add(" o ");
-		words.add(" p ");
-		words.add(" q ");
-		words.add(" r ");
-		words.add(" s ");
-		words.add(" t ");
-		words.add(" u ");
-		words.add(" ư ");
-		words.add(" v ");
-		words.add(" x ");
+		// words.add(" a ");
+		// words.add(" ă ");
+		// words.add(" â ");
+		// words.add(" b ");
+		// words.add(" c ");
+		// words.add(" d ");
+		// words.add(" đ ");
+		// words.add(" e ");
+		// words.add(" ê ");
+		// words.add(" g ");
+		// words.add(" h ");
+		// words.add(" i ");
+		// words.add(" k ");
+		// words.add(" l ");
+		// words.add(" m ");
+		// words.add(" n ");
+		// words.add(" o ");
+		// words.add(" p ");
+		// words.add(" q ");
+		// words.add(" r ");
+		// words.add(" s ");
+		// words.add(" t ");
+		// words.add(" u ");
+		// words.add(" ư ");
+		// words.add(" v ");
+		// words.add(" x ");
 
 		return words;
 	}

@@ -44,6 +44,35 @@ public class FacebookUtils {
 		return FacebookUtils.INSTANCE;
 	}
 
+	public static void ngram(Map<String, Integer> wordMap, String str, String gramType) {
+		// System.out.println(str);
+		String[] words = str.split("\\s+");
+		int start = 0, end = 0, size = words.length;
+		for (int i = 0; i < size; i++) {
+			// System.out.println(words[i]);
+			FacebookUtils.getInstance().putWordIntoMap(wordMap, words[i]);
+			if (!GeneralConstant.UNI_GRAM.equals(gramType)) {
+				if (FacebookUtils.getInstance().isOnlySpecialCharacter(words[i]) || i == size) {
+					end = i;
+					for (int j = start; j < end - 1; j++) {
+						String tmp = words[j] + "_" + words[j + 1];
+						// System.out.println(tmp);
+						FacebookUtils.getInstance().putWordIntoMap(wordMap, tmp);
+					}
+					if (!GeneralConstant.BI_GRAM.equals(gramType)) {
+						for (int j = start; j < end - 2; j++) {
+							String tmp = words[j] + "_" + words[j + 1] + "_" + words[j + 2];
+							// System.out.println(tmp);
+							FacebookUtils.getInstance().putWordIntoMap(wordMap, tmp);
+						}
+					}
+					start = end + 1;
+				}
+			}
+
+		}
+	}
+
 	public void createLibSVMFileWithTFIDF(Map<String, Integer> wordMap, List<FacebookObject> results) throws IOException {
 		Integer allSize = results.size();
 		// create the LibSVM file

@@ -14,6 +14,10 @@ public class FacebookObject {
 	private Map<String, Integer> threeGram;
 	private Map<String, Integer> mergedGram;
 
+	private Map<String, Integer> uniGram;
+	private Map<String, Integer> biGram;
+	private Map<String, Integer> triGram;
+
 	public Integer getTotalWord() {
 		Integer dem = 0;
 		if (oneGram == null || oneGram.isEmpty()) {
@@ -126,6 +130,30 @@ public class FacebookObject {
 
 	public void setMergedGram(Map<String, Integer> mergedGram) {
 		this.mergedGram = mergedGram;
+	}
+
+	public Map<String, Integer> getUniGram() {
+		return uniGram;
+	}
+
+	public void setUniGram(Map<String, Integer> uniGram) {
+		this.uniGram = uniGram;
+	}
+
+	public Map<String, Integer> getBiGram() {
+		return biGram;
+	}
+
+	public void setBiGram(Map<String, Integer> biGram) {
+		this.biGram = biGram;
+	}
+
+	public Map<String, Integer> getTriGram() {
+		return triGram;
+	}
+
+	public void setTriGram(Map<String, Integer> triGram) {
+		this.triGram = triGram;
 	}
 
 }

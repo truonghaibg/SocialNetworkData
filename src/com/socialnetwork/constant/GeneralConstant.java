@@ -65,4 +65,8 @@ public final class GeneralConstant {
 	public static String OUTPUT_FILE_VNTOKENIZER = "D:/Personal/workspace/SocialNetworkData/source/vn_tokenizer_status.csv";
 	public static String TEST_FILE = "source/test_file_fake.csv";
 
+	public static String UNI_GRAM = "unigram";
+	public static String BI_GRAM = "bigram";
+	public static String TRI_GRAM = "trigram";
+
 }
