@@ -601,19 +601,6 @@ public class FacebookUtils {
 		while (scanner.hasNext()) {
 			String next = scanner.next();
 			putWordIntoMap(wordMap, next);
-			// if (!(FacebookUtils.getInstance().isOnlyDigits(next) ||
-			// FacebookUtils.getInstance().isOnlyStrings(next) ||
-			// FacebookUtils.getInstance()
-			// .isOnlySpecialCharacter(next))) {
-			// String subNext = FacebookUtils.getInstance().splitString(next);
-			// Scanner subScanner = new Scanner(subNext);
-			// while (subScanner.hasNext()) {
-			// String subString = subScanner.next();
-			// putWordIntoMap(wordMap, subString);
-			// }
-			// } else {
-			// putWordIntoMap(wordMap, next);
-			// }
 		}
 	}
 

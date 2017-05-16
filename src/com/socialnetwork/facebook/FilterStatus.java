@@ -151,10 +151,10 @@ public class FilterStatus {
 			while ((line = buffReader.readLine()) != null) {
 				String[] wordInLines = line.split(",");
 				for (String wordInLine : wordInLines) {
-					if ("".equalsIgnoreCase(wordInLine.trim())) {
+					if ("".equalsIgnoreCase(wordInLine)) {
 						continue;
 					}
-					words.add(wordInLine.trim());
+					words.add(wordInLine);
 				}
 			}
 		} catch (FileNotFoundException e) {
@@ -166,33 +166,6 @@ public class FilterStatus {
 				buffReader.close();
 			}
 		}
-		// words.add(" a ");
-		// words.add(" ă ");
-		// words.add(" â ");
-		// words.add(" b ");
-		// words.add(" c ");
-		// words.add(" d ");
-		// words.add(" đ ");
-		// words.add(" e ");
-		// words.add(" ê ");
-		// words.add(" g ");
-		// words.add(" h ");
-		// words.add(" i ");
-		// words.add(" k ");
-		// words.add(" l ");
-		// words.add(" m ");
-		// words.add(" n ");
-		// words.add(" o ");
-		// words.add(" p ");
-		// words.add(" q ");
-		// words.add(" r ");
-		// words.add(" s ");
-		// words.add(" t ");
-		// words.add(" u ");
-		// words.add(" ư ");
-		// words.add(" v ");
-		// words.add(" x ");
-
 		return words;
 	}
 
