@@ -19,6 +19,9 @@ import java.util.TreeMap;
 import weka.core.Attribute;
 import weka.core.DenseInstance;
 import weka.core.Instances;
+import weka.core.converters.ArffSaver;
+import weka.filters.Filter;
+import weka.filters.unsupervised.instance.NonSparseToSparse;
 
 import com.common.CommonUtils;
 import com.restfb.Connection;
@@ -674,7 +677,7 @@ public class FacebookUtils {
 	public void createFileWekaDefault(Map<String, Integer> wordMap, List<FacebookObject> results) throws IOException {
 		ArrayList<Attribute> atts;
 		ArrayList<String> attVals;
-		Instances data;
+		Instances dataSet;
 		double[] vals;
 		// 1. set up attributes
 		atts = new ArrayList<Attribute>();
@@ -687,12 +690,12 @@ public class FacebookUtils {
 		atts.add(new Attribute(GeneralConstant.CLASS, attVals));
 
 		// 2. create Instances object
-		data = new Instances(GeneralConstant.FILE_WEKA_NAME, atts, 0);
+		dataSet = new Instances(GeneralConstant.FILE_WEKA_NAME, atts, 0);
 		// 3. fill with data
 		for (FacebookObject result : results) {
 			int i = 0;
 			Map<String, Integer> word = result.getCountByWords();
-			vals = new double[data.numAttributes()];
+			vals = new double[dataSet.numAttributes()];
 			for (Entry<String, Integer> entry : wordMap.entrySet()) {
 				if (word.containsKey(entry.getKey())) {
 					vals[i] = word.get(entry.getKey());
@@ -706,13 +709,21 @@ public class FacebookUtils {
 			} else if (GeneralConstant.CLASSIFY.MALE.equalsIgnoreCase(result.getGender())) {
 				vals[i] = attVals.indexOf(GeneralConstant.CLASSIFY.MALE);
 			}
-			data.add(new DenseInstance(1.0, vals));
+			dataSet.add(new DenseInstance(1.0, vals));
 		}
 		// 4. export file ARFF
-		BufferedWriter writer = new BufferedWriter(new FileWriter(GeneralConstant.FILE_WEKA_NAME_ARFF));
-		writer.write(data.toString());
-		writer.flush();
-		writer.close();
+		try {
+			NonSparseToSparse nonSTS = new NonSparseToSparse();
+			nonSTS.setInputFormat(dataSet);
+			Instances sparseDataset = Filter.useFilter(dataSet, nonSTS);
+			ArffSaver arffSaver = new ArffSaver();
+			arffSaver.setInstances(sparseDataset);
+			arffSaver.setFile(new File(GeneralConstant.FILE_WEKA_NAME_ARFF));
+			arffSaver.writeBatch();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 	}
 

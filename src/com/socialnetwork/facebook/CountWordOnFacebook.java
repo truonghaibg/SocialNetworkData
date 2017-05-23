@@ -25,7 +25,7 @@ public class CountWordOnFacebook {
 	public static void main(String agr[]) throws IOException {
 		// processNotVnTokenzierFile(GeneralConstant.FULL_STATUS_FILTER, false,
 		// true);
-		processVnTokenzierFile(GeneralConstant.VN_TOKENIZER_STATUS, false, true, true, false);
+		processVnTokenzierFile(GeneralConstant.VN_TOKENIZER_STATUS, true, false, false, false);
 
 		// handleFileFake(GeneralConstant.TEST_FILE);
 
@@ -123,7 +123,7 @@ public class CountWordOnFacebook {
 		// ===========================================================
 		// Create file
 		if (isWeka) {
-			FacebookUtils.getInstance().createFileWeka(wordMap, results);
+			FacebookUtils.getInstance().createFileWekaDefault(wordMap, results);
 		}
 		if (isTfIdf) {
 			FacebookUtils.getInstance().createLibSVMFileWithTFIDF(wordMap, results);
