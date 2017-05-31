@@ -119,11 +119,18 @@ public class MergedDataOnFacebook {
 			}
 		}
 		System.out.println("Size of user: " + users.size());
+
+		int countMale = 0, countFemale = 0;
 		FileWriter writer = null;
 		try {
 			writer = new FileWriter(GeneralConstant.VN_TOKENIZER_STATUS_MERGED);
 			for (Entry<String, FacebookObject> entry : users.entrySet()) {
 				FacebookObject value = entry.getValue();
+				if (GeneralConstant.CLASSIFY.MALE.equalsIgnoreCase(value.getGender())) {
+					countMale++;
+				} else {
+					countFemale++;
+				}
 				writer.write(value.getId() + "," + value.getName() + "," + value.getGender() + "," + value.getId() + "," + value.getFullMessage() + "\n");
 			}
 		} catch (IOException e) {
@@ -133,6 +140,8 @@ public class MergedDataOnFacebook {
 				writer.close();
 			}
 		}
+		System.out.println("Count male: " + countMale);
+		System.out.println("Count female: " + countFemale);
 	}
 
 	public static void merged(String inputFile, String compareFile) throws IOException {

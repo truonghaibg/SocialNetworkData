@@ -76,6 +76,12 @@ public class FacebookUtils {
 		}
 	}
 
+	public Integer count(List<String> l1, List<String> l2) {
+		List<String> l3 = new ArrayList<String>(l1);
+		l3.retainAll(l2);
+		return l3.size();
+	}
+
 	public void createLibSVMFileWithTFIDF(Map<String, Integer> wordMap, List<FacebookObject> results) throws IOException {
 		Integer allSize = results.size();
 		// create the LibSVM file
@@ -83,8 +89,8 @@ public class FacebookUtils {
 
 		// insert data into the LibSVM file
 		for (FacebookObject result : results) {
-			Integer sttSize = result.getTotalWord();
 			Map<String, Integer> treeCateMap = new TreeMap<String, Integer>(result.getCountByWords());
+			Integer sttSize = count(new ArrayList<>(wordMap.keySet()), new ArrayList<>(treeCateMap.keySet()));
 			if (GeneralConstant.CLASSIFY.FEMALE.equalsIgnoreCase(result.getGender())) {
 				writer.write(GeneralConstant.CLASSIFY.FEMALE_VALUE);
 			} else if (GeneralConstant.CLASSIFY.MALE.equalsIgnoreCase(result.getGender())) {
@@ -198,6 +204,38 @@ public class FacebookUtils {
 			int i = 1;
 			for (Entry<String, Integer> entry : wordMap.entrySet()) {
 				if (treeCateMap.containsKey(entry.getKey())) {
+					writer.write(" " + i + ":" + 1);
+				}
+				i++;
+			}
+			writer.write("\n");
+		}
+		writer.flush();
+		writer.close();
+	}
+
+	public final void createBinaryFile(Map<String, Integer> wordMap, List<FacebookObject> results, String typeNgram) throws IOException {
+		// create the Binary file
+		BufferedWriter writer = new BufferedWriter(new FileWriter(GeneralConstant.PATH_LIBLINEAR + typeNgram + GeneralConstant._BINARY_LIBSVM));
+
+		// insert data into the Binary file
+		for (FacebookObject result : results) {
+			Map<String, Integer> word = new HashMap<String, Integer>();
+			if (GeneralConstant.UNI_GRAM.equals(typeNgram)) {
+				word = result.getUniGram();
+			} else if (GeneralConstant.BI_GRAM.equals(typeNgram)) {
+				word = result.getBiGram();
+			} else if (GeneralConstant.TRI_GRAM.equals(typeNgram)) {
+				word = result.getTriGram();
+			}
+			if (GeneralConstant.CLASSIFY.FEMALE.equalsIgnoreCase(result.getGender())) {
+				writer.write(GeneralConstant.CLASSIFY.FEMALE_VALUE);
+			} else if (GeneralConstant.CLASSIFY.MALE.equalsIgnoreCase(result.getGender())) {
+				writer.write(GeneralConstant.CLASSIFY.MALE_VALUE);
+			}
+			int i = 1;
+			for (Entry<String, Integer> entry : wordMap.entrySet()) {
+				if (word.containsKey(entry.getKey())) {
 					writer.write(" " + i + ":" + 1);
 				}
 				i++;

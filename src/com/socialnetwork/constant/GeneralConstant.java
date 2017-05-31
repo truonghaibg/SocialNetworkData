@@ -18,7 +18,7 @@ public final class GeneralConstant {
 
 	public class CLASSIFY {
 		public static final String MALE = "male";
-		public static final String MALE_VALUE = "+1";
+		public static final String MALE_VALUE = "1";
 		public static final String FEMALE = "female";
 		public static final String FEMALE_VALUE = "-1";
 	}
@@ -47,6 +47,10 @@ public final class GeneralConstant {
 	public static String LIBSVM_FILE_FINAL = "source/facebook_status.libsvm";
 	public static String LIBSVM_FILE_FINAL_WINDOWS_DEFAULT_TEST = "C:/libsvm-3.21/tools/facebook_default_test.libsvm";
 
+	public static String _COUNT_LIBSVM = "_count.libsvm";
+	public static String _TFIDF_LIBSVM = "_tfidf.libsvm";
+	public static String _BINARY_LIBSVM = "_binary.libsvm";
+	public static String PATH_LIBLINEAR = "C:/liblinear-2.11/windows/";
 	public static String LIBSVM_FILE_FINAL_WINDOWS_TFIDF = "C:/liblinear-2.11/windows/facebook_tfidf.libsvm";
 	public static String LIBSVM_FILE_FINAL_WINDOWS_BINARY = "C:/liblinear-2.11/windows/facebook_binary.libsvm";
 	public static String LIBSVM_FILE_FINAL_WINDOWS_1GRAM = "C:/liblinear-2.11/windows/facebook_1gram.libsvm";
