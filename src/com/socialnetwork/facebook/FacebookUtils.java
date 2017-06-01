@@ -47,50 +47,43 @@ public class FacebookUtils {
 		return FacebookUtils.INSTANCE;
 	}
 
-	public static void ngram(Map<String, Integer> wordMap, String str, String gramType) {
-		// System.out.println(str);
-		String[] words = str.split("\\s+");
-		int start = 0, end = 0, size = words.length;
-		for (int i = 0; i < size; i++) {
-			// System.out.println(words[i]);
-			FacebookUtils.getInstance().putWordIntoMap(wordMap, words[i]);
-			if (!GeneralConstant.UNI_GRAM.equals(gramType)) {
-				if (FacebookUtils.getInstance().isOnlySpecialCharacter(words[i]) || i == size) {
-					end = i;
-					for (int j = start; j < end - 1; j++) {
-						String tmp = words[j] + "_" + words[j + 1];
-						// System.out.println(tmp);
-						FacebookUtils.getInstance().putWordIntoMap(wordMap, tmp);
-					}
-					if (!GeneralConstant.BI_GRAM.equals(gramType)) {
-						for (int j = start; j < end - 2; j++) {
-							String tmp = words[j] + "_" + words[j + 1] + "_" + words[j + 2];
-							// System.out.println(tmp);
-							FacebookUtils.getInstance().putWordIntoMap(wordMap, tmp);
-						}
-					}
-					start = end + 1;
-				}
-			}
-
-		}
-	}
-
 	public Integer count(List<String> l1, List<String> l2) {
 		List<String> l3 = new ArrayList<String>(l1);
 		l3.retainAll(l2);
 		return l3.size();
 	}
 
-	public void createLibSVMFileWithTFIDF(Map<String, Integer> wordMap, List<FacebookObject> results) throws IOException {
-		Integer allSize = results.size();
+	public void createTfIdfFile(Map<String, Integer> wordMap, List<FacebookObject> results, String typeNgram) throws IOException {
 		// create the LibSVM file
-		BufferedWriter writer = new BufferedWriter(new FileWriter(GeneralConstant.LIBSVM_FILE_FINAL_WINDOWS_TFIDF));
-
+		BufferedWriter writer = new BufferedWriter(new FileWriter(GeneralConstant.PATH_LIBLINEAR + typeNgram + GeneralConstant._TFIDF_LIBSVM));
+		for (Entry<String, Integer> entry : wordMap.entrySet()) {
+			wordMap.put(entry.getKey(), 0);
+		}
+		for (FacebookObject result : results) {
+			Map<String, Integer> word = new HashMap<String, Integer>();
+			if (GeneralConstant.UNI_GRAM.equals(typeNgram)) {
+				word = result.getUniGram();
+			} else if (GeneralConstant.BI_GRAM.equals(typeNgram)) {
+				word = result.getBiGram();
+			} else if (GeneralConstant.TRI_GRAM.equals(typeNgram)) {
+				word = result.getTriGram();
+			}
+			for (Entry<String, Integer> entry : word.entrySet()) {
+				if (wordMap.containsKey(entry.getKey())) {
+					wordMap.put(entry.getKey(), wordMap.get(entry.getKey()) + 1);
+				}
+			}
+		}
 		// insert data into the LibSVM file
 		for (FacebookObject result : results) {
-			Map<String, Integer> treeCateMap = new TreeMap<String, Integer>(result.getCountByWords());
-			Integer sttSize = count(new ArrayList<>(wordMap.keySet()), new ArrayList<>(treeCateMap.keySet()));
+			Map<String, Integer> word = new HashMap<String, Integer>();
+			if (GeneralConstant.UNI_GRAM.equals(typeNgram)) {
+				word = result.getUniGram();
+			} else if (GeneralConstant.BI_GRAM.equals(typeNgram)) {
+				word = result.getBiGram();
+			} else if (GeneralConstant.TRI_GRAM.equals(typeNgram)) {
+				word = result.getTriGram();
+			}
 			if (GeneralConstant.CLASSIFY.FEMALE.equalsIgnoreCase(result.getGender())) {
 				writer.write(GeneralConstant.CLASSIFY.FEMALE_VALUE);
 			} else if (GeneralConstant.CLASSIFY.MALE.equalsIgnoreCase(result.getGender())) {
@@ -98,9 +91,10 @@ public class FacebookUtils {
 			}
 			int i = 1;
 			for (Entry<String, Integer> entry : wordMap.entrySet()) {
-				if (treeCateMap.containsKey(entry.getKey())) {
-					Integer wordSize = treeCateMap.get(entry.getKey());
-					writer.write(" " + i + ":" + FacebookUtils.INSTANCE.TF_IDF(allSize, sttSize, wordSize));
+				if (word.containsKey(entry.getKey())) {
+					int sttSize = numberJoin(wordMap, word);
+					Integer wordSize = word.get(entry.getKey());
+					writer.write(" " + i + ":" + FacebookUtils.INSTANCE.TF_IDF(wordSize, sttSize, results, entry.getKey(), typeNgram));
 				}
 				i++;
 			}
@@ -246,13 +240,19 @@ public class FacebookUtils {
 		writer.close();
 	}
 
-	public final void create1GramFile(Map<String, Integer> wordMap, List<FacebookObject> results) throws IOException {
+	public final void createCountFile(Map<String, Integer> wordMap, List<FacebookObject> results, String typeNgram) throws IOException {
 		// create the LibSVM file
-		BufferedWriter writer = new BufferedWriter(new FileWriter(GeneralConstant.LIBSVM_FILE_FINAL_WINDOWS_1GRAM));
-
+		BufferedWriter writer = new BufferedWriter(new FileWriter(GeneralConstant.PATH_LIBLINEAR + typeNgram + GeneralConstant._COUNT_LIBSVM));
 		// insert data into the LibSVM file
 		for (FacebookObject result : results) {
-			Map<String, Integer> treeCateMap = new TreeMap<String, Integer>(result.getCountByWords());
+			Map<String, Integer> word = new HashMap<String, Integer>();
+			if (GeneralConstant.UNI_GRAM.equals(typeNgram)) {
+				word = result.getUniGram();
+			} else if (GeneralConstant.BI_GRAM.equals(typeNgram)) {
+				word = result.getBiGram();
+			} else if (GeneralConstant.TRI_GRAM.equals(typeNgram)) {
+				word = result.getTriGram();
+			}
 			if (GeneralConstant.CLASSIFY.FEMALE.equalsIgnoreCase(result.getGender())) {
 				writer.write(GeneralConstant.CLASSIFY.FEMALE_VALUE);
 			} else if (GeneralConstant.CLASSIFY.MALE.equalsIgnoreCase(result.getGender())) {
@@ -260,8 +260,8 @@ public class FacebookUtils {
 			}
 			int i = 1;
 			for (Entry<String, Integer> entry : wordMap.entrySet()) {
-				if (treeCateMap.containsKey(entry.getKey())) {
-					writer.write(" " + i + ":" + treeCateMap.get(entry.getKey()));
+				if (word.containsKey(entry.getKey())) {
+					writer.write(" " + i + ":" + word.get(entry.getKey()));
 				}
 				i++;
 			}
@@ -660,6 +660,21 @@ public class FacebookUtils {
 		}
 	}
 
+	public void putWordIntoMap(Map<String, Integer> wordMap, String word, boolean isStatus) {
+		// if (isOnlyDigits(word)) {
+		// word = GeneralConstant.DIGIT;
+		// }
+		// if (isHashTag(word)) {
+		// word = GeneralConstant.HASH_TAG;
+		// }
+		Integer count = wordMap.get(word);
+		if (count == null) {
+			wordMap.put(word, 1);
+		} else if (isStatus) {
+			wordMap.put(word, (count + 1));
+		}
+	}
+
 	public void createFileWeka(Map<String, Integer> wordMap, List<FacebookObject> results) throws IOException {
 		ArrayList<Attribute> atts;
 		ArrayList<String> attVals;
@@ -884,13 +899,12 @@ public class FacebookUtils {
 		if (value < 5) {
 			return true;
 		}
+		if (key.split("_").length == 1 && key.length() > 1) {
+			System.out.println(key);
+		}
 		if (key.length() <= 1 || FacebookUtils.getInstance().isNumberInWord(key)) {
 			return true;
 		}
-
-		// if (key.split("_").length == 1) {
-		// System.out.println(key);
-		// }
 
 		return false;
 	}
@@ -900,6 +914,17 @@ public class FacebookUtils {
 		while (iterator.hasNext()) {
 			Entry<String, Integer> entry = iterator.next();
 			if (FacebookUtils.getInstance().removeWord(entry)) {
+				iterator.remove();
+			}
+		}
+	}
+
+	public void removeWord(Map<String, Integer> wordMap, List<String> wordRemove) {
+		Iterator<Entry<String, Integer>> iterator = wordMap.entrySet().iterator();
+		while (iterator.hasNext()) {
+			Entry<String, Integer> entry = iterator.next();
+			if (FacebookUtils.getInstance().removeWord(entry)) {
+				wordRemove.add(entry.getKey());
 				iterator.remove();
 			}
 		}
@@ -943,7 +968,7 @@ public class FacebookUtils {
 		return result.toString();
 	}
 
-	public double TF(Integer sttSize, Integer wordSize) {
+	public double TF(Integer wordSize, Integer sttSize) {
 		if (sttSize == 0 || wordSize == 0) {
 			return 0;
 		}
@@ -959,10 +984,54 @@ public class FacebookUtils {
 	}
 
 	public double TF_IDF(Integer allSize, Integer sttSize, Integer wordSize) {
-		double temp = TF(sttSize, wordSize) * IDF(allSize, wordSize);
+		double temp = TF(wordSize, sttSize) * IDF(allSize, wordSize);
 		temp = Math.round(temp * 1000);
 		temp = temp / 1000;
 		return temp;
+	}
+
+	public int numberJoin(Map<String, Integer> golbalMap, Map<String, Integer> localMap) {
+		List<String> golbalList = new ArrayList<String>(golbalMap.keySet());
+		List<String> localList = new ArrayList<String>(localMap.keySet());
+		List<String> common = new ArrayList<String>(localList);
+		common.retainAll(golbalList);
+
+		return common.size();
+	}
+
+	public double TF_IDF(int wordSize, int sttSize, List<FacebookObject> docs, String term, String typeNgram) {
+		double temp = TF(wordSize, sttSize) * IDF(docs, term, typeNgram);
+		temp = Math.round(temp * 1000);
+		temp = temp / 1000;
+		return temp;
+	}
+
+	private double IDF(List<FacebookObject> docs, String term, String typeNgram) {
+		double count = 0;
+		if (GeneralConstant.UNI_GRAM.equals(typeNgram)) {
+			for (FacebookObject doc : docs) {
+				Map<String, Integer> unigramMap = doc.getUniGram();
+				if (unigramMap.get(term) != null) {
+					count++;
+				}
+			}
+		} else if (GeneralConstant.BI_GRAM.equals(typeNgram)) {
+			for (FacebookObject doc : docs) {
+				Map<String, Integer> bigramMap = doc.getBiGram();
+				if (bigramMap.get(term) != null) {
+					count++;
+				}
+			}
+		} else if (GeneralConstant.TRI_GRAM.equals(typeNgram)) {
+			for (FacebookObject doc : docs) {
+				Map<String, Integer> trigrammap = doc.getTriGram();
+				if (trigrammap.get(term) != null) {
+					count++;
+				}
+			}
+		}
+
+		return Math.log10(docs.size() / count);
 	}
 
 	public void handleLibSVMFake(Map<String, Integer> wordMap, List<FacebookObject> results) throws IOException {

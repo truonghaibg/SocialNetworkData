@@ -31,11 +31,14 @@ public class CountWordOnFacebook {
 
 	}
 
-	public static void processVnTokenzierFile(String nameFile, boolean isWeka, boolean isTfIdf, boolean isBinary, boolean count) throws IOException {
+	public static void processVnTokenzierFile(String nameFile, boolean isWeka, boolean isTfIdf, boolean isBinary, boolean isCount) throws IOException {
 		Map<String, FacebookObject> hashMap = new LinkedHashMap<String, FacebookObject>();
 		Map<String, Integer> unigramMap = new HashMap<String, Integer>();
 		Map<String, Integer> bigramMap = new HashMap<String, Integer>();
 		Map<String, Integer> trigramMap = new HashMap<String, Integer>();
+		writerRemoveFile(nameFile);
+		List<String> wordRemove = loadWordInFile();
+
 		BufferedReader buffReader = null;
 		try {
 			buffReader = new BufferedReader(new InputStreamReader(new FileInputStream(new File(nameFile)), GeneralConstant.ENCODING_UTF8));
@@ -48,6 +51,7 @@ public class CountWordOnFacebook {
 					Map<String, Integer> triGramTemp = new HashMap<String, Integer>();
 					String mgs = user[4];
 					mgs = mgs.replaceAll("\\d+", GeneralConstant.DIGIT);
+					mgs = removeInString(mgs, wordRemove);
 					mgs = CommonUtils.formatString(mgs);
 					ngram(unigramMap, mgs, GeneralConstant.UNI_GRAM);
 					ngram(bigramMap, mgs, GeneralConstant.BI_GRAM);
@@ -94,13 +98,15 @@ public class CountWordOnFacebook {
 		// }
 
 		// Begin: remove words
-		FacebookUtils.getInstance().removeWord(unigramMap);
-		FacebookUtils.getInstance().removeWord(bigramMap);
-		FacebookUtils.getInstance().removeWord(trigramMap);
+		// FacebookUtils.getInstance().removeWord(unigramMap);
+		// FacebookUtils.getInstance().removeWord(bigramMap);
+		// FacebookUtils.getInstance().removeWord(trigramMap);
 		// End: remove words
-		System.out.println("Filter unigram size: " + unigramMap.size());
-		System.out.println("Filter bigram size: " + bigramMap.size());
-		System.out.println("Filter trigram size: " + trigramMap.size());
+
+		// System.out.println("Filter unigram size: " + unigramMap.size());
+		// System.out.println("Filter bigram size: " + bigramMap.size());
+		// System.out.println("Filter trigram size: " + trigramMap.size());
+
 		// try {
 		// writer = new FileWriter(GeneralConstant.FILTER_WORD);
 		// for (Entry<String, Integer> entry : unigramMap.entrySet()) {
@@ -135,24 +141,34 @@ public class CountWordOnFacebook {
 				countFemale++;
 			}
 		}
+		System.out.println("Total (male + female): " + (countMale + countFemale));
 		System.out.println("Count male: " + countMale);
 		System.out.println("Count female: " + countFemale);
-		System.out.println("Total: " + (countMale + countFemale));
 		// ===========================================================
 		// Create file
 		if (isWeka) {
 			FacebookUtils.getInstance().createFileWekaDefault(unigramMap, results);
 		}
-		if (count) {
-			FacebookUtils.getInstance().create1GramFile(unigramMap, results);
-			FacebookUtils.getInstance().create2GramFile(results);
-			FacebookUtils.getInstance().create3GramFile(results);
+		if (isCount) {
+			// FacebookUtils.getInstance().createCountFile(unigramMap, results,
+			// GeneralConstant.UNI_GRAM);
+			// FacebookUtils.getInstance().createCountFile(bigramMap, results,
+			// GeneralConstant.BI_GRAM);
+			// FacebookUtils.getInstance().createCountFile(trigramMap, results,
+			// GeneralConstant.TRI_GRAM);
 		}
 		if (isTfIdf) {
-			FacebookUtils.getInstance().createLibSVMFileWithTFIDF(unigramMap, results);
+			FacebookUtils.getInstance().createTfIdfFile(unigramMap, results, GeneralConstant.UNI_GRAM);
+			FacebookUtils.getInstance().createTfIdfFile(bigramMap, results, GeneralConstant.BI_GRAM);
+			FacebookUtils.getInstance().createTfIdfFile(trigramMap, results, GeneralConstant.TRI_GRAM);
 		}
 		if (isBinary) {
-			FacebookUtils.getInstance().createBinaryFile(unigramMap, results, GeneralConstant.UNI_GRAM);
+			// FacebookUtils.getInstance().createBinaryFile(unigramMap, results,
+			// GeneralConstant.UNI_GRAM);
+			// FacebookUtils.getInstance().createBinaryFile(bigramMap, results,
+			// GeneralConstant.BI_GRAM);
+			// FacebookUtils.getInstance().createBinaryFile(trigramMap, results,
+			// GeneralConstant.TRI_GRAM);
 		}
 
 	}
@@ -338,4 +354,103 @@ public class CountWordOnFacebook {
 		}
 	}
 
+	public static void ngram1(Map<String, Integer> wordMap, String str, String gramType) {
+		// System.out.println(str);
+		String[] words = str.split("\\s+");
+		int size = words.length;
+		if (GeneralConstant.UNI_GRAM.equals(gramType)) {
+			for (int i = 0; i < size; i++) {
+				FacebookUtils.getInstance().putWordIntoMap(wordMap, words[i]);
+			}
+		} else if (GeneralConstant.BI_GRAM.equals(gramType)) {
+			for (int i = 0; i < size - 1; i++) {
+				String tmp = words[i] + "_" + words[i + 1];
+				FacebookUtils.getInstance().putWordIntoMap(wordMap, tmp);
+			}
+		} else if (GeneralConstant.TRI_GRAM.equals(gramType)) {
+			for (int i = 0; i < size - 2; i++) {
+				String tmp = words[i] + "_" + words[i + 1] + "_" + words[i + 2];
+				FacebookUtils.getInstance().putWordIntoMap(wordMap, tmp);
+			}
+		}
+	}
+
+	public static List<String> loadWordInFile() throws IOException {
+		List<String> words = new ArrayList<String>();
+		BufferedReader buffReader = null;
+		try {
+			buffReader = new BufferedReader(new InputStreamReader(new FileInputStream(new File("source/remove_word.csv")), GeneralConstant.ENCODING_UTF8));
+			String line;
+			while ((line = buffReader.readLine()) != null) {
+				String word = line.trim();
+				if (word.length() > 0) {
+					words.add(word);
+				}
+			}
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			if (buffReader != null) {
+				buffReader.close();
+			}
+		}
+		return words;
+	}
+
+	public static void writerRemoveFile(String nameFile) throws IOException {
+		List<String> wordRemove = new ArrayList<String>();
+		BufferedReader buffReader = null;
+		Map<String, Integer> unigramMap = new HashMap<String, Integer>();
+		try {
+			buffReader = new BufferedReader(new InputStreamReader(new FileInputStream(new File(nameFile)), GeneralConstant.ENCODING_UTF8));
+			String line;
+			while ((line = buffReader.readLine()) != null) {
+				String[] user = line.split(",", 5);
+				if (user.length == 5) {
+					String mgs = user[4];
+					mgs = CommonUtils.formatString(mgs);
+					mgs = mgs.replaceAll("\\d+", GeneralConstant.DIGIT);
+					ngram(unigramMap, mgs, GeneralConstant.UNI_GRAM);
+				}
+			}
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			if (buffReader != null) {
+				buffReader.close();
+			}
+		}
+		FacebookUtils.getInstance().removeWord(unigramMap, wordRemove);
+		FileWriter writer = null;
+		try {
+			writer = new FileWriter("source/remove_word.csv");
+			for (String word : wordRemove) {
+				writer.write(word + "\n");
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			if (writer != null) {
+				writer.close();
+			}
+		}
+	}
+
+	public static String removeInString(String str, List<String> list) throws IOException {
+		// System.out.println(str);
+		String[] words = str.split("\\s+");
+		int size = words.length;
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < size; i++) {
+			if (!list.contains(words[i])) {
+				sb.append(words[i]).append(" ");
+			}
+		}
+		// System.out.println(sb.toString().trim());
+		return sb.toString().trim();
+	}
 }

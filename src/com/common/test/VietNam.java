@@ -1,5 +1,8 @@
 package com.common.test;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class VietNam {
 	public static String DATA_FILE_INPUT = "data/dataFacebook_v22.csv";
 	public static String DATA_FILE_OUTPUT = "data/dataFacebook_v222.csv";
@@ -16,5 +19,11 @@ public class VietNam {
 		// String language = DetectLanguage.simpleDetect("toàn_thân");
 		// System.out.println(language);
 		// VietTokenizer viet = new VietTokenizer();
+		List<String> l1 = new ArrayList<String>();
+		String content = "is not like is, but mistakes are common";
+		l1.add("is");
+		String regex = "\\s*\\bis\\b\\s*";
+		content = content.replaceAll(regex, "");
+		System.out.println(content);
 	}
 }

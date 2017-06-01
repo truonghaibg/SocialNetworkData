@@ -111,7 +111,7 @@ public class FakeData {
 		// ===========================================================
 		// Create file
 		// handleFileFake(wordMap, GeneralConstant.TEST_FILE);
-		FacebookUtils.getInstance().createLibSVMFileWithTFIDF(wordMap, results);
+		// FacebookUtils.getInstance().createTfIdfFile(wordMap, results);
 		FacebookUtils.getInstance().createLibSVMFileDefault(wordMap, results);
 		FacebookUtils.getInstance().createBinaryFile(wordMap, results);
 
