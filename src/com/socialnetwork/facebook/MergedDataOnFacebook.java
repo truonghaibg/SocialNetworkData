@@ -50,7 +50,7 @@ public class MergedDataOnFacebook {
 			int count = 0;
 			while ((line = buffReader.readLine()) != null) {
 				String[] split = line.split(",");
-				if (!split[2].equals(results.get(i)) && split[2].equals(GeneralConstant.CLASSIFY.MALE) && split[4].length() < 50) {
+				if (!split[2].equals(results.get(i)) && split[2].equals(GeneralConstant.CLASSIFY.MALE) && split[4].length() > 150) {
 					System.out.println(split[3]);
 					count++;
 				} else {

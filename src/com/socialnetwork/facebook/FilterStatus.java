@@ -41,7 +41,7 @@ public class FilterStatus {
 				if (blackListStatus.contains(user[3])) {
 					continue;
 				}
-				if (user.length == 5 && !isContant(lists, user[4]) && checkLength(user[4], 10, 255) && checkNumberWord(user[4])) {
+				if (user.length == 5 && !isContant(lists, user[4]) && checkLength(user[4], 5, 255) && checkNumberWord(user[4])) {
 					strList.add(line);
 				} else {
 					dem++;
